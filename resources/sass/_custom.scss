@@ -1,0 +1,20 @@
+.v-card--reveal {
+    align-items: center;
+    bottom: 0;
+    justify-content: center;
+    opacity: .5;
+    position: absolute;
+    width: 100%;
+}
+/* loading button */
+.v-btn__loader {
+    background-color: #969696;
+}
+
+// Editor error
+.editor-error {
+    margin-bottom: 5px;
+    .ql-toolbar.ql-snow, .ql-container.ql-snow {
+        border: 2px solid #ff5252;
+    }
+}

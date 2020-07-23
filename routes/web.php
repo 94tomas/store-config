@@ -13,6 +13,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+// Routes catalog
+Route::get('catalogo', 'CatalogController@index')->name('catalog');
+Route::get('producto/{slug}', function () {
+    return view('single-product');
 });
+// Route::get('/home', 'HomeController@index')->name('home');
+
+// Routes user
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('users/{id}', 'UserController@show');
+    // Routes admin
+    Route::get('admin', function () {
+        return view('admin');
+    });
+    // Routes products
+    Route::resource('product', 'ProductController');
+});
+
+// Routes categories
+Route::get('categories', 'CategoryController@index');
