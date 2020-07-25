@@ -16,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $indexProduct = Product::select('id', 'name', 'banner', 'price', 'discount', 'qualification', 'slug')
+        $indexProduct = Product::select('id', 'name', 'banner', 'price', 'discount', 'slug')
             ->where('publish', true)
             ->orderBy('created_at', 'DESC')
             ->take(6)
@@ -32,7 +32,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $dataProduct = Product::select('id', 'name', 'banner', 'publish')
+        $dataProduct = Product::select('id', 'name', 'banner', 'publish', 'slug')
             ->orderBy('created_at', 'DESC')
             ->paginate(6);
 

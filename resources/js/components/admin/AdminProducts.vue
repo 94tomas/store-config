@@ -53,13 +53,13 @@
                         </v-chip>
                         <v-spacer></v-spacer>
 
-                        <!-- <v-btn icon>
+                        <v-btn icon :href="`/producto/${item.slug}`">
                             <v-icon>mdi-eye</v-icon>
-                        </v-btn> -->
-
-                        <v-btn icon>
-                            <v-icon>mdi-share-variant</v-icon>
                         </v-btn>
+
+                        <!-- <v-btn icon>
+                            <v-icon>mdi-share-variant</v-icon>
+                        </v-btn> -->
 
                         <v-btn icon @click="openProduct(item.id)">
                             <v-icon>mdi-pencil</v-icon>
@@ -290,7 +290,7 @@
                             <v-col cols="12" md="12" class="py-0">
                                 <v-switch
                                     v-model="data.publish"
-                                    :label="(data.publish) ? 'Publicado' : 'Oculto'"
+                                    :label="(data.publish) ? 'Disponible' : 'No disponible'"
                                     dense
                                     :error-messages="(errors.publish) ? errors.publish[0] : ''"
                                 ></v-switch>
@@ -522,7 +522,7 @@
                             <v-col cols="12" md="12" class="py-0">
                                 <v-switch
                                     v-model="dataEdit.publish"
-                                    :label="(dataEdit.publish) ? 'Publicado' : 'Oculto'"
+                                    :label="(dataEdit.publish) ? 'Disponible' : 'No disponible'"
                                     dense
                                     :error-messages="(errors2.publish) ? errors2.publish[0] : ''"
                                 ></v-switch>

@@ -14,7 +14,7 @@
         </v-parallax> -->
         
         <v-container fluid>
-            <v-row>
+            <v-row v-if="load">
                 <v-col
                     cols="12"
                     sm="6"
@@ -57,14 +57,13 @@
                         <v-row>
                             <v-col cols="12">
                                 <a href="/catalogo" class="black--text mb-3 body-2">Volver a la tienda</a>
-                                <h1 class="font-weight-bold mb-6 mb-6 display-2">Nombre del producto</h1>
+                                <h1 class="font-weight-bold mb-6 mb-6 display-2">{{ singleProduct.name }}</h1>
                                 <div class="mb-6">
-                                    <span class="text-decoration-line-through display-1 grey--text">Bs.250</span>
-                                    <span class="font-weight-medium display-1" style="color: #af2344">Bs.300</span>
+                                    <span class="text-decoration-line-through display-1 grey--text" v-if="singleProduct.discount !== 0">Bs.{{ singleProduct.price }}</span>
+                                    <span class="font-weight-medium display-1" style="color: #af2344">Bs.{{ singleProduct.price - singleProduct.discount }}</span>
                                 </div>
                                 <div class="body-2">
-                                    Disponibilidad: <strong>Disponible</strong> <br>
-                                    Vendedor: <strong>Nombre de la tienda</strong>
+                                    Disponibilidad: <strong>{{ (singleProduct.stock > 0) ? 'D' : 'No d' }}isponible</strong>
                                 </div>
                             </v-col>
                             <!-- actions -->
@@ -76,6 +75,7 @@
                                     x-large
                                     color="green darken-2"
                                     dark
+                                    @click="$store.dispatch('addItem', singleProduct.slug)"
                                 >
                                     <v-icon left>
                                         mdi-cart
@@ -85,9 +85,7 @@
                             </v-col>
                             <!-- details -->
                             <v-col cols="12">
-                                <div>
-                                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Explicabo ut voluptatem omnis praesentium, necessitatibus ab nihil earum provident labore! Animi, debitis dolores? Quae, laborum soluta sit ex quod eaque officia.</p>
-                                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam, tempora iure pariatur illum, eaque assumenda voluptate fugiat quo veritatis libero atque provident qui fugit delectus quisquam incidunt nihil at reprehenderit!</p>
+                                <div v-html="singleProduct.description" class="c-description">
                                 </div>
                             </v-col>
                             <!-- social -->
@@ -115,6 +113,12 @@
                     </div>
                 </v-col>
             </v-row>
+
+            <v-row v-else>
+                <v-col class="text-center">
+                    cargando ...
+                </v-col>
+            </v-row>
         </v-container>
     </div>
 </template>
@@ -122,17 +126,38 @@
 export default {
     data() {
         return {
-            previewPic: 'https://source.unsplash.com/random/?vans-2',
-            gallery: [
-                {url: 'https://source.unsplash.com/random/?vans-2'},
-                {url: 'https://source.unsplash.com/random/?vans-3'},
-                {url: 'https://source.unsplash.com/random/?vans-4'}
-            ]
+            previewPic: '',
+            gallery: [],
+            load: false,
+            singleProduct: {}
         }
+    },
+    props: ['slug'],
+    mounted() {
+        this.getProduct();
     },
     methods: {
         changePreview(url) {
             this.previewPic = url;
+        },
+        getProduct() {
+            axios.get(`single/${this.slug}`)
+            .then((response) => {
+                // console.log(response);
+                this.singleProduct = response.data;
+                this.previewPic = `/images/banners/${response.data.banner}`;
+                this.gallery.push({url: `/images/banners/${response.data.banner}`});
+                if (response.data.gallery.length > 0) {
+                    response.data.gallery.forEach(img => {
+                        this.gallery.push({url: `/images/galleries/${img.image}`});
+                    });
+                }
+                this.load = true;
+            })
+            .catch((error) => {
+                // console.log(error);
+                location.reload();
+            })
         }
     },
 }

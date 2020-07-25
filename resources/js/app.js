@@ -64,6 +64,7 @@ Vue.component('home-page', require('./components/views/HomePage.vue').default);
 Vue.component('catalog-page', require('./components/views/CatalogPage.vue').default);
 Vue.component('single-product', require('./components/views/SinglePage.vue').default);
 Vue.component('admin-page', require('./components/views/AdminPage.vue').default);
+Vue.component('cart-page', require('./components/views/CartPage.vue').default);
 // admin
 Vue.component('admin-products', require('./components/admin/AdminProducts.vue').default);
 Vue.component('admin-offers', require('./components/admin/AdminOffers.vue').default);

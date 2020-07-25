@@ -7,6 +7,9 @@
     width: 100%;
 }
 /* loading button */
+.v-btn--fab .v-btn__loader {
+    border-radius: 50%;
+}
 .v-btn__loader {
     background-color: #969696;
 }
@@ -16,5 +19,58 @@
     margin-bottom: 5px;
     .ql-toolbar.ql-snow, .ql-container.ql-snow {
         border: 2px solid #ff5252;
+    }
+}
+// single description
+.c-description {
+    counter-reset: list-0; 
+    p {
+        margin-bottom: 10px;
+    } 
+    blockquote {
+        border-left: 4px solid #ccc;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        padding-left: 16px;
+    }
+    ul, ol {
+        margin-bottom: 10px;
+    }
+    ol>li, ul>li {
+        list-style-type: none;
+    }
+    ul li::before {
+        content: '\2022';
+        margin-right: 10px;
+        text-align: center;
+        width: 31px;
+        display: inline-block;
+    }
+    ol li:before {
+        counter-increment: list-0;
+        content: counter(list-0,decimal) '. ';
+        margin-right: 10px;
+        text-align: center;
+        width: 31px;
+        display: inline-block;
+    }
+    ul[data-checked=false]>li::before, 
+    ul[data-checked=true]>li::before {
+        font-size: 1.35em;
+        vertical-align: baseline;
+        bottom: -.065em;
+        font-weight: 900;
+        color: #222;
+        margin-right: 10px;
+    }
+    ul[data-checked=false]>li::before {
+        content: '\2610';
+    }
+    ul[data-checked=true]>li::before {
+        content: '\2611';
+        color: green;
+    }
+    ul[data-checked]:not(:last-child) {
+        margin-bottom: 0;
     }
 }

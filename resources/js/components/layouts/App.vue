@@ -2,27 +2,32 @@
     <v-app>
         <!-- Nav aside -->
         <v-navigation-drawer
-            v-model="drawer"
+            :value="drawer"
+            @input="$store.dispatch('openNavigationDrawer', $event)"
             app
             right
             width="320"
         >
-            <v-list dense>
-                <v-list-item v-for="(item, index) in 3" :key="index">
+            <v-list dense v-if="cart !== '{}'">
+                <v-list-item v-for="(item) in JSON.parse(cart)" :key="item.slug">
                     <v-list-item-avatar class="rounded-0" height="60" width="60">
                         <v-img
-                            src="https://source.unsplash.com/random/?shoes"
+                            :src="`/images/banners/${item.banner}`"
                         ></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
                         <v-list-item-title>
-                            <a href="#" class="text-decoration-none black--text" style="font-size: 14px;">Nombre del producto</a>
+                            <a :href="`/producto/${item.slug}`" class="text-decoration-none black--text" style="font-size: 14px;">
+                                {{ item.name }}
+                            </a>
                         </v-list-item-title>
-                        <span style="font-size: 14px" class="text--secondary">Bs.250</span>
-                        <v-list-item-subtitle style="font-size: 12px">Nombre de la tienda</v-list-item-subtitle>
+                        <span style="font-size: 14px" class="text--secondary">
+                            Bs.{{ item.price - item.discount }}
+                            <span v-if="item.quantity > 1"> X {{ item.quantity }}</span>
+                        </span>
                     </v-list-item-content>
                     <v-list-item-action>
-                        <v-btn icon>
+                        <v-btn icon @click="$store.dispatch('removeItem', item.slug)">
                             <v-icon color="grey lighten-1">mdi-close-circle</v-icon>
                         </v-btn>
                     </v-list-item-action>
@@ -36,7 +41,7 @@
                             <span style="font-size: 12px">SubTotal: </span>
                         </v-col>
                         <v-col cols="6">
-                            <span class="deep-orange--text subtitle-1">Bs.250</span>
+                            <span class="deep-orange--text subtitle-1">Bs.{{ total }}</span>
                         </v-col>
                     </v-row>
                 </v-list-item>
@@ -45,8 +50,24 @@
                     <v-btn
                         dark
                         block
+                        href="/carrito"
                     >
-                        Pagar
+                        Lista de pago
+                    </v-btn>
+                </v-list-item>
+            </v-list>
+
+            <v-list v-else>
+                <v-list-item class="justify-center">
+                    Ningun producto
+                </v-list-item>
+                <v-list-item>
+                    <v-btn
+                        dark
+                        block
+                        href="/catalogo"
+                    >
+                        Seguir comprando
                     </v-btn>
                 </v-list-item>
             </v-list>
@@ -186,13 +207,13 @@
                 small
                 class="mx-2"
                 color="green darken-2"
-                @click.stop="drawer = !drawer"
+                @click.stop="$store.commit('openDrawer', true)"
             >
                 <!-- @click.stop="$store.dispatch('toggleDrawerOn', drawer);" -->
                 <!-- @click.stop="$store.commit('toggleDrawer', !drawer)" -->
                 <v-badge
-                    content="3"
-                    value="3"
+                    :content="count"
+                    :value="count"
                     color="red"
                 >
                     <v-icon>
@@ -271,7 +292,7 @@ export default {
                 { id: 1, name: "Inicio", route: `/` },
                 { id: 2, name: "Catalogo", route: `/catalogo` },
             ],
-            drawer: null,
+            // drawer: null,
             user: {
                 name: ''
             }
@@ -332,6 +353,20 @@ export default {
                 console.log(error);
             })
         }
-    },    
+    },
+    computed: {
+        cart() {
+            return this.$store.state.cart;
+        },
+        count() {
+            return this.$store.state.count;
+        },
+        total() {
+            return this.$store.state.total;
+        },
+        drawer() {
+            return this.$store.state.drawer;
+        },
+    },
 }
 </script>

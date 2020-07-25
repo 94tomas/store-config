@@ -2,6 +2,6 @@
 
 @section('content')
 
-<single-product></single-product>
+<single-product slug="{{ request()->route('slug') }}"></single-product>
 
 @endsection

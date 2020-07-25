@@ -74,6 +74,7 @@
                                         fab
                                         right
                                         top
+                                        @click="$store.dispatch('addItem', item.slug)"
                                     >
                                         <v-icon>mdi-cart</v-icon>
                                     </v-btn>
@@ -84,13 +85,13 @@
                                     <div class="subtitle-1 font-weight-light green--text mb-0">{{ item.name }}</div>
                                 </v-card-text>
                                 <v-card-actions class="px-4 pb-4">
+                                    <v-spacer></v-spacer>
                                     <v-btn
                                         dark
                                         :href="`/producto/${item.slug}`"
                                     >
                                         Detalles
                                     </v-btn>
-                                    <v-spacer></v-spacer>
                                     <!-- <v-tooltip top>
                                         <template v-slot:activator="{ on, attrs }">
                                             <v-btn
@@ -104,9 +105,9 @@
                                         <span>{{ item.qualification }}</span>
                                     </v-tooltip> -->
                                     
-                                    <v-btn icon>
+                                    <!-- <v-btn icon>
                                         <v-icon>mdi-share-variant</v-icon>
-                                    </v-btn>
+                                    </v-btn> -->
                                 </v-card-actions>
                             </v-card>
                         </v-hover>
@@ -149,9 +150,9 @@ export default {
     },
     methods: {
         getProduct() {
-            axios.get(`product`)
+            axios.get(`product-index`)
             .then((response) => {
-                console.log(response);
+                // console.log(response);
                 this.listProduct = response.data;
             })
             .catch((error) => {

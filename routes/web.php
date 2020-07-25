@@ -17,12 +17,9 @@ Route::get('/', 'HomeController@index')->name('home');
 
 Auth::routes();
 
-// Routes catalog
-Route::get('catalogo', 'CatalogController@index')->name('catalog');
-Route::get('producto/{slug}', function () {
-    return view('single-product');
-});
 // Route::get('/home', 'HomeController@index')->name('home');
+// Routes categories
+Route::get('categories', 'CategoryController@index');
 
 // Routes user
 Route::group(['middleware' => ['auth']], function () {
@@ -35,5 +32,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('product', 'ProductController');
 });
 
-// Routes categories
-Route::get('categories', 'CategoryController@index');
+// Routes catalog
+Route::get('catalogo', 'CatalogController@index')->name('catalog');
+Route::get('product-index', 'ProductController@index');
+Route::get('producto/{slug}', function() {
+    return view('single-product');
+});
+Route::get('producto/single/{slug}', 'CatalogController@show');
+
+// Routes cart localstorage
+Route::get('add/{slug}', 'CatalogController@addItem');
+Route::get('carrito', function() {
+    return view('cart');
+});

@@ -64,19 +64,19 @@
                                     <div class="subtitle-1 font-weight-light green--text mb-0">Zapatos Vans</div>
                                 </v-card-text>
                                 <v-card-actions class="px-4 pb-4">
+                                    <v-spacer></v-spacer>
                                     <v-btn
                                         dark
                                         :href="`/producto/producti-${index}`"
                                     >
                                         Detalles
                                     </v-btn>
-                                    <v-spacer></v-spacer>
-                                    <v-btn icon>
+                                    <!-- <v-btn icon>
                                         <v-icon>mdi-heart</v-icon>
                                     </v-btn>
                                     <v-btn icon>
                                         <v-icon>mdi-share-variant</v-icon>
-                                    </v-btn>
+                                    </v-btn> -->
                                 </v-card-actions>
                             </v-card>
                         </v-hover>
