@@ -14,7 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::select()
+            ->orderBy('created_at', 'DESC')
+            ->get();
 
         return response()->json($categories, 200);
     }
@@ -37,7 +39,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newCategory = new Category;
+        $newCategory->name = $request['name'];
+        $newCategory->description = $request['description'];
+        $newCategory->save();
+
+        return response()->json(['msg' => 'ok'], 200);
     }
 
     /**
@@ -48,7 +55,9 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $cat = Category::find($id);
+
+        return response()->json($cat, 200);
     }
 
     /**
@@ -71,7 +80,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $upCat = Category::find($id);
+        $upCat->name = $request['name'];
+        $upCat->description = $request['description'];
+        $upCat->save();
+
+        return response()->json(['msg' => 'ok'], 200);
     }
 
     /**
@@ -82,6 +96,11 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delCat = Category::find($id);
+        if (count($delCat->product) === 0) {
+            $delCat->delete();
+            return response()->json(['msg' => 'ok'], 200);
+        }
+        return response()->json(['msg' => 'denied'], 200);
     }
 }

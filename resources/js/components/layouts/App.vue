@@ -9,29 +9,64 @@
             width="320"
         >
             <v-list dense v-if="cart !== '{}'">
-                <v-list-item v-for="(item) in JSON.parse(cart)" :key="item.slug">
-                    <v-list-item-avatar class="rounded-0" height="60" width="60">
-                        <v-img
-                            :src="`/images/banners/${item.banner}`"
-                        ></v-img>
-                    </v-list-item-avatar>
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            <a :href="`/producto/${item.slug}`" class="text-decoration-none black--text" style="font-size: 14px;">
-                                {{ item.name }}
-                            </a>
-                        </v-list-item-title>
-                        <span style="font-size: 14px" class="text--secondary">
-                            Bs.{{ item.price - item.discount }}
-                            <span v-if="item.quantity > 1"> X {{ item.quantity }}</span>
-                        </span>
-                    </v-list-item-content>
-                    <v-list-item-action>
-                        <v-btn icon @click="$store.dispatch('removeItem', item.slug)">
-                            <v-icon color="grey lighten-1">mdi-close-circle</v-icon>
-                        </v-btn>
-                    </v-list-item-action>
-                </v-list-item>
+                <v-list-item-group v-for="(item) in JSON.parse(cart)" :key="item.slug">
+                    <template v-if="Array.isArray(item)">
+                        <v-list-item v-for="(child, index) in item" :key="index">
+                            <v-list-item-avatar class="rounded-0" height="60" width="60">
+                                <v-img
+                                    :src="`/images/banners/${child.banner}`"
+                                ></v-img>
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    <a :href="`/producto/${child.slug}`" class="text-decoration-none black--text" style="font-size: 14px;">
+                                        {{ child.name }}
+                                    </a>
+                                </v-list-item-title>
+                                <v-list-item-subtitle>
+                                    <span class="text--primary d-block">
+                                        Bs.{{ child.price - child.discount }}
+                                        <span class="orange--text" v-if="child.quantity > 1"> X {{ child.quantity }}</span>
+                                    </span>
+                                    <span v-for="(at, index) in child.attr" :key="index">
+                                        {{ index }}: {{ at }}
+                                    </span>
+                                </v-list-item-subtitle>
+                            </v-list-item-content>
+                            <v-list-item-action>
+                                <v-btn icon @click="$store.dispatch('removeItem', {slug: child.slug, index: index})">
+                                    <v-icon color="grey lighten-1">mdi-close-circle</v-icon>
+                                </v-btn>
+                            </v-list-item-action>
+                        </v-list-item>
+                    </template>
+                    <!-- not ATTRIBUTE -->
+                    <v-list-item v-else>
+                        <v-list-item-avatar class="rounded-0" height="60" width="60">
+                            <v-img
+                                :src="`/images/banners/${item.banner}`"
+                            ></v-img>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                <a :href="`/producto/${item.slug}`" class="text-decoration-none black--text" style="font-size: 14px;">
+                                    {{ item.name }}
+                                </a>
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                <span class="text--primary d-block">
+                                    Bs.{{ item.price - item.discount }}
+                                    <span class="orange--text" v-if="item.quantity > 1"> X {{ item.quantity }}</span>
+                                </span>
+                            </v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-action>
+                            <v-btn icon @click="$store.dispatch('removeItem', {slug: item.slug, index: null})">
+                                <v-icon color="grey lighten-1">mdi-close-circle</v-icon>
+                            </v-btn>
+                        </v-list-item-action>
+                    </v-list-item>
+                </v-list-item-group>
 
                 <v-divider></v-divider>
 

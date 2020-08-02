@@ -54,13 +54,14 @@
                                     :src="`images/banners/${item.banner}`"
                                 >
                                     <v-expand-transition>
-                                        <div
+                                        <a
+                                            :href="`/producto/${item.slug}`"
                                             v-if="hover"
-                                            class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal display-2 white--text"
+                                            class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal display-2 white--text text-decoration-none"
                                             style="height: 100%;"
                                         >
                                             Bs.{{ item.price - item.discount }}
-                                        </div>
+                                        </a>
                                     </v-expand-transition>
                                 </v-img>
                                 <v-card-text
@@ -74,23 +75,37 @@
                                         fab
                                         right
                                         top
-                                        @click="$store.dispatch('addItem', item.slug)"
+                                        :href="`/producto/${item.slug}`"
                                     >
-                                        <v-icon>mdi-cart</v-icon>
+                                        <v-icon>mdi-eye</v-icon>
                                     </v-btn>
                                     <div class="font-weight-light title mb-2">
                                         <span class="text-decoration-line-through grey--text" v-if="item.discount !== 0">Bs.{{ item.price }}</span>
                                         <span class="deep-orange--text">Bs.{{ item.price - item.discount }}</span>
                                     </div>
-                                    <div class="subtitle-1 font-weight-light green--text mb-0">{{ item.name }}</div>
+                                    <div class="subtitle-1 font-weight-light black--text mb-0">{{ item.name }}</div>
                                 </v-card-text>
                                 <v-card-actions class="px-4 pb-4">
                                     <v-spacer></v-spacer>
                                     <v-btn
+                                        v-if="item.attribute.length == 0"
+                                        dark
+                                        @click="$store.dispatch('addItem', {slug: item.slug, attribute: null})"
+                                    >
+                                        <v-icon left>
+                                            mdi-cart-arrow-down
+                                        </v-icon>
+                                        Comprar
+                                    </v-btn>
+                                    <v-btn
+                                        v-else
                                         dark
                                         :href="`/producto/${item.slug}`"
                                     >
-                                        Detalles
+                                        <v-icon left>
+                                            mdi-cart-plus
+                                        </v-icon>
+                                        Mas opciones
                                     </v-btn>
                                     <!-- <v-tooltip top>
                                         <template v-slot:activator="{ on, attrs }">

@@ -27,6 +27,9 @@ class CatalogController extends Controller
     {
         $singleProduct = Product::where('slug', $slug)
             ->with('gallery')
+            ->with(array('attribute' => function($q) {
+                $q->select('name', 'attribute');
+            }))
             ->first();
 
         return response()->json($singleProduct, 200);
@@ -36,8 +39,17 @@ class CatalogController extends Controller
     {
         $selectProd = Product::select('id', 'slug', 'banner', 'name', 'price', 'discount')
             ->where('slug', $slug)
+            /* ->with(array('attribute' => function($q) {
+                $q->select('name', 'attribute');
+            })) */
             ->first();
         $selectProd->quantity = 1;
+        $selectProd->attr = null;
+        /* if (count($selectProd->attribute) !== 0) {
+            $selectProd->attr = $selectProd->attribute[0]->attribute;
+        } else {
+            $selectProd->attr = null;
+        } */
         
         return response()->json($selectProd, 200);
     }

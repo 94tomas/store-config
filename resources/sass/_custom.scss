@@ -74,3 +74,15 @@
         margin-bottom: 0;
     }
 }
+
+// response content image
+.img-response-100 {
+    .v-responsive__content {
+        width: 100% !important;
+    }
+}
+
+.btn-cart.theme--dark.v-btn.v-btn--disabled:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+    background-color: #737373!important;
+    color: #c7c7c7 !important;
+}

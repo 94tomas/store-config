@@ -1,5 +1,18 @@
 function initialCount(obj) {
     var count0 = 0;
+    Object.entries(obj).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach(j => {
+                count0++;
+            });
+        } else {
+            count0++;
+        }
+    });
+    return count0;
+}
+function sizeObj(obj) {
+    var count0 = 0;
     var key0;
     for (key0 in obj) {
         if (obj.hasOwnProperty(key0)) {
@@ -10,9 +23,18 @@ function initialCount(obj) {
 }
 function total(cart) {
     var total_price = 0;
-    for (const key in cart) {
+    Object.entries(cart).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach(item => {
+                total_price += ((item.price - item.discount) * item.quantity);
+            });
+        } else {
+            total_price += ((cart[key].price - cart[key].discount) * cart[key].quantity);
+        }
+    });
+    /* for (const key in cart) {
         total_price += ((cart[key].price - cart[key].discount) * cart[key].quantity);
-    }
+    } */
     return total_price;
 }
 
@@ -41,14 +63,34 @@ export default {
         openNavigationDrawer({commit}, open) {
             commit('openDrawer', open);
         },
-        addItem({commit}, slug) {
-            axios.get(`${location.protocol}//${window.location.hostname}/add/${slug}`)
+        addItem({commit}, opt) {
+            axios.get(`${location.protocol}//${window.location.hostname}/add/${opt.slug}`)
             .then((response) => {
                 // console.log(response);
+                if (opt.attribute !== null) {
+                    response.data.attr = opt.attribute;
+                }
                 if (localStorage.getItem('cart')) {
                     const tmp = JSON.parse(localStorage.getItem('cart'));
-                    if (!(slug in tmp)) {
-                        tmp[slug] = response.data;
+                    if (opt.attribute !== null) {
+                        if ((opt.slug in tmp)) {
+                            // tmp[opt.slug].push(response.data);
+                            var add = true;
+                            tmp[opt.slug].forEach(element => {
+                                var con = 0;
+                                Object.entries(opt.attribute).forEach(([key, value]) => {
+                                    if (element.attr[key] === value) con++;
+                                });
+                                if (con === sizeObj(element.attr)) add = false;
+                            });
+                            // console.log(add);
+                            if (add) tmp[opt.slug].push(response.data);
+                        } else {
+                            // const tmparray = [response.data];
+                            tmp[opt.slug] = [response.data];
+                        }
+                    } else {
+                        if (!(opt.slug in tmp)) tmp[opt.slug] = response.data;
                     }
                     localStorage.removeItem('cart');
                     localStorage.setItem('cart', JSON.stringify(tmp));
@@ -57,7 +99,7 @@ export default {
                     commit('changeTotal', total(tmp));
                 } else {
                     const tmp2 = {};
-                    tmp2[slug] = response.data;
+                    tmp2[opt.slug] = (opt.attribute !== null) ? [response.data] : response.data;
                     localStorage.setItem('cart', JSON.stringify(tmp2));
                     commit('changeCart', JSON.stringify(tmp2));
                     commit('changeCount', 1);
@@ -70,15 +112,21 @@ export default {
                 console.log(error);
             })
         },
-        removeItem({commit}, slug) {
+        removeItem({commit}, opt) {
             if (localStorage.getItem('cart')) {
                 const tmp_cart = JSON.parse(localStorage.getItem('cart'));
-                const newCart = Object.keys(tmp_cart).reduce((object, key) => {
-                    if (key !== slug) {
-                      object[key] = tmp_cart[key]
-                    }
-                    return object
-                }, {})
+                var newCart = {};
+                if (opt.index !== null) {
+                    Object.entries(tmp_cart).forEach(([key, value]) => {
+                        if (key === opt.slug) (value.length !== 1) ? value.splice(opt.index, 1) : delete tmp_cart[opt.slug];
+                    });
+                    newCart = tmp_cart;
+                } else {
+                    newCart = Object.keys(tmp_cart).reduce((object, key) => {
+                        if (key !== opt.slug) object[key] = tmp_cart[key];
+                        return object
+                    }, {})
+                }
 
                 localStorage.removeItem('cart');
                 localStorage.setItem('cart', JSON.stringify(newCart));
@@ -91,12 +139,19 @@ export default {
         },
         // change quantity
         changeQuantity({commit}, item) {
-            console.log(item.quantity + '_' + item.slug);
-
             const up_cart = JSON.parse(localStorage.getItem('cart'));
-            const slug_p = item.slug;
+            Object.entries(up_cart).forEach(([key, value]) => {
+                if (key === item.slug) {
+                    if (Array.isArray(value)) {
+                        value[item.index].quantity = item.quantity;
+                    } else {
+                        value.quantity = item.quantity;
+                    }
+                }
+            });
+            /* const slug_p = item.slug;
             const item_p = up_cart[slug_p];
-            item_p.quantity = item.quantity;
+            item_p.quantity = item.quantity; */
 
             localStorage.removeItem('cart');
             localStorage.setItem('cart', JSON.stringify(up_cart));

@@ -71,6 +71,11 @@ Vue.component('admin-offers', require('./components/admin/AdminOffers.vue').defa
 Vue.component('admin-sales', require('./components/admin/AdminSales.vue').default);
 Vue.component('admin-orders', require('./components/admin/AdminOrders.vue').default);
 Vue.component('admin-settings', require('./components/admin/AdminSettings.vue').default);
+// ** //products
+Vue.component('admin-add', require('./components/admin/products/Add.vue').default);
+Vue.component('admin-edit', require('./components/admin/products/Edit.vue').default);
+Vue.component('admin-categories', require('./components/admin/products/Categories.vue').default);
+Vue.component('admin-attributes', require('./components/admin/products/Attributes.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

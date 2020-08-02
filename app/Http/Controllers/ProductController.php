@@ -19,6 +19,7 @@ class ProductController extends Controller
         $indexProduct = Product::select('id', 'name', 'banner', 'price', 'discount', 'slug')
             ->where('publish', true)
             ->orderBy('created_at', 'DESC')
+            ->with('attribute')
             ->take(6)
             ->get();
 
@@ -32,7 +33,11 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $dataProduct = Product::select('id', 'name', 'banner', 'publish', 'slug')
+        $dataProduct = Product::select('id', 'name', 'banner', 'publish', 'slug', 'category_id')
+            ->with('category')
+            ->with(array('attribute' => function($q) {
+                $q->select('name', 'attribute');
+            }))
             ->orderBy('created_at', 'DESC')
             ->paginate(6);
 
@@ -86,6 +91,12 @@ class ProductController extends Controller
             }
         }
 
+        // Add attribute
+        $arrayAttr = explode(',', $request['attributes']);
+        foreach ($arrayAttr as $idAttr) {
+            \DB::insert('insert into product_attribute (product_id, attribute_id) values (?, ?)', [$product->id, $idAttr]);
+        }
+
         return response()->json(['msg' => 'ok'], 200);
     }
 
@@ -99,9 +110,10 @@ class ProductController extends Controller
     {
         $showProduct = Product::where('id', $id)
             ->with('gallery')
+            ->with('attribute')
             ->first();
 
-         return response()->json($showProduct, 200);
+        return response()->json($showProduct, 200);
     }
 
     /**
@@ -186,16 +198,17 @@ class ProductController extends Controller
                 \DB::insert('insert into galleries (image, product_id) values (?, ?)', [$imgName, $id]);
             }
         }
-        /* $galleries = $request->file('gallery');
-        if($request->hasFile('gallery'))
-        {
-            foreach ($galleries as $key => $item) {
-                $upload_path = public_path('images/galleries');
-                $imgName = 'img_' . $key . time() . '.' . $item->getClientOriginalExtension();
-                $item->move($upload_path, $imgName);
-                \DB::insert('insert into galleries (image, product_id) values (?, ?)', [$imgName, $product->id]);
+        // update attributes
+        // Add attribute
+        if ($request['attributes']) {
+            $arrayAttr2 = explode(',', $request['attributes']);
+            \DB::table('product_attribute')->where('product_id', $upProduct->id)->delete();
+            foreach ($arrayAttr2 as $idAttr) {
+                \DB::insert('insert into product_attribute (product_id, attribute_id) values (?, ?)', [$upProduct->id, $idAttr]);
             }
-        } */
+        } else {
+            \DB::table('product_attribute')->where('product_id', $upProduct->id)->delete();
+        }
 
         return response()->json(['msg' => 'ok'], 200);
     }

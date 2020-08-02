@@ -32,4 +32,9 @@ class Product extends Model
     {
         return $this->hasMany('App\Gallery');
     }
+    //attribute
+    public function attribute()
+    {
+        return $this->belongsToMany('App\Attribute', 'product_attribute');
+    }
 }

@@ -16,47 +16,96 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(item) in JSON.parse(cart)" :key="item.slug">
-                                <td>
-                                    <v-list-item class="px-0">
-                                        <v-list-item-avatar class="rounded-0" height="60" width="60">
-                                            <v-img
-                                                :src="`/images/banners/${item.banner}`"
-                                            ></v-img>
-                                        </v-list-item-avatar>
-                                        <v-list-item-content>
-                                            <v-list-item-title>
-                                                <a :href="`/producto/${item.slug}`" class="text-decoration-none black--text" style="font-size: 14px;">
-                                                    {{ item.name }}
-                                                </a>
-                                            </v-list-item-title>
-                                            <span style="font-size: 14px" class="text--secondary">Rojo</span>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                </td>
-                                <td>Bs.{{ item.price - item.discount }}</td>
-                                <td>
-                                    <v-text-field
-                                        label="Cantidad"
-                                        solo
-                                        dense
-                                        type="number"
-                                        hide-details
-                                        style="max-width: 90px"
-                                        min="1"
-                                        step="1"
-                                        required
-                                        v-model="item.quantity"
-                                        @input="$store.dispatch('changeQuantity', {quantity:$event, slug:item.slug})"
-                                    ></v-text-field>
-                                </td>
-                                <td>Bs.{{ (item.price - item.discount) * item.quantity }}</td>
-                                <td>
-                                    <v-btn fab dark x-small @click="$store.dispatch('removeItem', item.slug)">
-                                        <v-icon>mdi-close-circle</v-icon>
-                                    </v-btn>
-                                </td>
-                            </tr>
+                            <template v-for="(item) in JSON.parse(cart)">
+                                <template v-if="Array.isArray(item)">
+                                    <tr v-for="(child, index) in item">
+                                        <td>
+                                            <v-list-item class="px-0">
+                                                <v-list-item-avatar class="rounded-0" height="60" width="60">
+                                                    <v-img
+                                                        :src="`/images/banners/${child.banner}`"
+                                                    ></v-img>
+                                                </v-list-item-avatar>
+                                                <v-list-item-content>
+                                                    <v-list-item-title>
+                                                        <a :href="`/producto/${child.slug}`" class="text-decoration-none black--text" style="font-size: 14px;">
+                                                            {{ child.name }}
+                                                        </a>
+                                                    </v-list-item-title>
+                                                    <span v-for="(at, index) in child.attr" :key="index">
+                                                        {{ index }}: {{ at }}
+                                                    </span>
+                                                </v-list-item-content>
+                                            </v-list-item>
+                                        </td>
+                                        <td>Bs.{{ child.price - child.discount }}</td>
+                                        <td>
+                                            <v-text-field
+                                                label="Cantidad"
+                                                solo
+                                                dense
+                                                type="number"
+                                                hide-details
+                                                style="max-width: 90px"
+                                                min="1"
+                                                step="1"
+                                                required
+                                                v-model="child.quantity"
+                                                @input="$store.dispatch('changeQuantity', {quantity: $event, slug: child.slug, index: index})"
+                                            ></v-text-field>
+                                        </td>
+                                        <td>Bs.{{ (child.price - child.discount) * child.quantity }}</td>
+                                        <td>
+                                            <v-btn fab dark x-small @click="$store.dispatch('removeItem', {slug: child.slug, index: index})">
+                                                <v-icon>mdi-close-circle</v-icon>
+                                            </v-btn>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <!-- not attributes -->
+                                <template v-else>
+                                    <tr>
+                                        <td>
+                                            <v-list-item class="px-0">
+                                                <v-list-item-avatar class="rounded-0" height="60" width="60">
+                                                    <v-img
+                                                        :src="`/images/banners/${item.banner}`"
+                                                    ></v-img>
+                                                </v-list-item-avatar>
+                                                <v-list-item-content>
+                                                    <v-list-item-title>
+                                                        <a :href="`/producto/${item.slug}`" class="text-decoration-none black--text" style="font-size: 14px;">
+                                                            {{ item.name }}
+                                                        </a>
+                                                    </v-list-item-title>
+                                                </v-list-item-content>
+                                            </v-list-item>
+                                        </td>
+                                        <td>Bs.{{ item.price - item.discount }}</td>
+                                        <td>
+                                            <v-text-field
+                                                label="Cantidad"
+                                                solo
+                                                dense
+                                                type="number"
+                                                hide-details
+                                                style="max-width: 90px"
+                                                min="1"
+                                                step="1"
+                                                required
+                                                v-model="item.quantity"
+                                                @input="$store.dispatch('changeQuantity', {quantity:$event, slug:item.slug, index: null})"
+                                            ></v-text-field>
+                                        </td>
+                                        <td>Bs.{{ (item.price - item.discount) * item.quantity }}</td>
+                                        <td>
+                                            <v-btn fab dark x-small @click="$store.dispatch('removeItem', {slug: item.slug, index:null})">
+                                                <v-icon>mdi-close-circle</v-icon>
+                                            </v-btn>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
                             <tr>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
@@ -77,7 +126,7 @@
                 <v-row class="mt-5">
                     <v-col cols="12" class="text-right">
                         <v-btn
-                            dark
+                            text
                             href="/catalogo"
                         >
                             Seguir comprando
@@ -85,7 +134,7 @@
                         <v-btn
                             dark
                         >
-                            Continuar
+                            Continuar con la compra
                         </v-btn>
                     </v-col>
                 </v-row>

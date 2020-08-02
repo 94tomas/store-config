@@ -19,7 +19,9 @@ Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
 // Routes categories
-Route::get('categories', 'CategoryController@index');
+Route::resource('categories', 'CategoryController');
+// Routes attributes
+Route::resource('attributes', 'AttributeController');
 
 // Routes user
 Route::group(['middleware' => ['auth']], function () {

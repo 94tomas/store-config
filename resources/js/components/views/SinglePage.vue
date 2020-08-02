@@ -66,19 +66,32 @@
                                     Disponibilidad: <strong>{{ (singleProduct.stock > 0) ? 'D' : 'No d' }}isponible</strong>
                                 </div>
                             </v-col>
+                            <v-col cols="12" sm="6" v-for="(item, index) in singleProduct.attribute" :key="index">
+                                <div class="body-2 text-capitalize">{{ item.name }}</div>
+                                <v-select
+                                    :items="item.attribute.split(',')"
+                                    :label="item.name"
+                                    solo
+                                    hide-details
+                                    @change="objSize"
+                                    v-model="attributes[item.name]"
+                                ></v-select>
+                            </v-col>
                             <!-- actions -->
                             <v-col
                                 cols="12"
-                                md="auto"
+                                sm="12"
                             >
                                 <v-btn
                                     x-large
                                     color="green darken-2"
                                     dark
-                                    @click="$store.dispatch('addItem', singleProduct.slug)"
+                                    class="btn-cart"
+                                    @click="$store.dispatch('addItem', {slug: singleProduct.slug, attribute:(singleProduct.attribute.length === 0) ? null : attributes})"
+                                    :disabled="(singleProduct.attribute.length === sizeAttr) ? false : true"
                                 >
                                     <v-icon left>
-                                        mdi-cart
+                                        mdi-cart-arrow-down
                                     </v-icon>
                                     Añadir a carrito
                                 </v-btn>
@@ -129,7 +142,9 @@ export default {
             previewPic: '',
             gallery: [],
             load: false,
-            singleProduct: {}
+            singleProduct: {},
+            attributes: {},
+            sizeAttr: 0
         }
     },
     props: ['slug'],
@@ -158,6 +173,14 @@ export default {
                 // console.log(error);
                 location.reload();
             })
+        },
+        objSize() {
+            const obj = this.attributes;
+            var size = 0, key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++;
+            }
+            this.sizeAttr = size;
         }
     },
 }
