@@ -2,7 +2,7 @@
     <div>
         <v-container>
             <div v-if="cart !== '{}'" class="py-5">
-                <div class="text-h4 text-center text-capitalize font-weight-bold mb-5">Tu carrito</div>
+                <div class="text-h4 text-center text-capitalize font-weight-bold mb-5">Mi carrito</div>
 
                 <v-simple-table>
                     <template v-slot:default>
@@ -133,6 +133,7 @@
                         </v-btn>
                         <v-btn
                             dark
+                            href="/pagos"
                         >
                             Continuar con la compra
                         </v-btn>

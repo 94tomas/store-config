@@ -47,3 +47,6 @@ Route::get('add/{slug}', 'CatalogController@addItem');
 Route::get('carrito', function() {
     return view('cart');
 });
+Route::get('pagos', function () {
+    return view('checkout');
+});
