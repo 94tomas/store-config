@@ -59,6 +59,7 @@ Vue.use(VueNotification, {
 
 // Components
 Vue.component('app-layout', require('./components/layouts/App.vue').default);
+Vue.component('dash-layout', require('./components/layouts/Dash.vue').default);
 // views
 Vue.component('home-page', require('./components/views/HomePage.vue').default);
 Vue.component('catalog-page', require('./components/views/CatalogPage.vue').default);
@@ -77,6 +78,8 @@ Vue.component('admin-add', require('./components/admin/products/Add.vue').defaul
 Vue.component('admin-edit', require('./components/admin/products/Edit.vue').default);
 Vue.component('admin-categories', require('./components/admin/products/Categories.vue').default);
 Vue.component('admin-attributes', require('./components/admin/products/Attributes.vue').default);
+// ** //offers
+Vue.component('admin-add-offer', require('./components/admin/offers/Add.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

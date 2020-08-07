@@ -12,9 +12,34 @@ class CatalogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('catalog');
+        $byCat = $request['cat'];
+        $byTitle = $request['title'];
+
+        /* $dataProduct = Product::select()
+            ->with('category')
+            ->with(array('attribute' => function($q) {
+                $q->select('name', 'attribute');
+            }))
+            ->orderBy('created_at', 'DESC')
+            ->paginate(6); */
+
+        $dataProduct = Product::select()
+            ->with('category')
+            ->whereHas('category', function($x) use($byCat) {
+                if ($byCat !== 'all') {
+                    $x->where('id', $byCat);
+                }
+            })
+            ->where('name', 'like', '%'.$byTitle.'%')
+            ->with(array('attribute' => function($q) {
+                $q->select('name', 'attribute');
+            }))
+            ->orderBy('created_at', 'DESC')
+            ->paginate(9);
+
+        return response()->json($dataProduct, 200);
     }
 
     /**
@@ -30,6 +55,7 @@ class CatalogController extends Controller
             ->with(array('attribute' => function($q) {
                 $q->select('name', 'attribute');
             }))
+            ->where('publish', 1)
             ->first();
 
         return response()->json($singleProduct, 200);

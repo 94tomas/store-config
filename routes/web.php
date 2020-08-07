@@ -35,7 +35,10 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 // Routes catalog
-Route::get('catalogo', 'CatalogController@index')->name('catalog');
+Route::get('list-product', 'CatalogController@index')->name('catalog');
+Route::get('catalogo', function () {
+    return view('catalog');
+});
 Route::get('product-index', 'ProductController@index');
 Route::get('producto/{slug}', function() {
     return view('single-product');

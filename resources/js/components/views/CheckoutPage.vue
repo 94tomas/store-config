@@ -175,7 +175,8 @@
                             <v-card flat>
                                 <v-select
                                     :items="methodPay"
-                                    label="Método de pago *"
+                                    label="
+                                    Seleccione un método de pago *"
                                     hint="Selecione un método de pago"
                                     outlined
                                     dense
@@ -302,7 +303,7 @@ export default {
             e6: 1,
             radios: 'store',
             cities: ['Beni', 'Chuquisaca', 'Cochabamba', 'La Paz', 'Oruro', 'Pando', 'Potosí', 'Santa Cruz', 'Tarija'],
-            methodPay: ['Tarjeta de Crédito / Débito', 'Transferencia bancaria', 'Togo Money', 'En tienda']
+            methodPay: ['Tarjeta de Crédito / Débito', 'Transferencia bancaria', 'Tigo Money', 'En tienda']
         }
     },
     computed: {

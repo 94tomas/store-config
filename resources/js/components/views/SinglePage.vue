@@ -129,7 +129,7 @@
 
             <v-row v-else>
                 <v-col class="text-center">
-                    cargando ...
+                    {{ msg }}
                 </v-col>
             </v-row>
         </v-container>
@@ -144,7 +144,8 @@ export default {
             load: false,
             singleProduct: {},
             attributes: {},
-            sizeAttr: 0
+            sizeAttr: 0,
+            msg: 'cargando ...'
         }
     },
     props: ['slug'],
@@ -171,7 +172,8 @@ export default {
             })
             .catch((error) => {
                 // console.log(error);
-                location.reload();
+                // location.reload();
+                this.msg = 'Producto no publicado'
             })
         },
         objSize() {
